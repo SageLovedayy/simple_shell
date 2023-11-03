@@ -22,6 +22,7 @@ typedef struct
 } BuiltInCommand;
 
 void argChecker(int argc, char *cmd);
+char *flagChecker(char **args);
 
 void executeLS(int argc, char *argv[]);
 void handleEnvCommand(int argc, char *argv[]);

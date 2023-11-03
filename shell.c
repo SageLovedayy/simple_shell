@@ -7,31 +7,57 @@
 void argChecker(int argc, char *cmd)
 {
 	BuiltInCommand builtInCommand[] = {
-		{"ls", executeLS},
-		{"env", handleEnvCommand},
-		{'\0', NULL},
-		/* Add more ... */
+	    {"ls", executeLS},
+	    {"env", handleEnvCommand},
+	    {'\0', NULL},
+	    /* Add more ... */
 	};
 	int i;
-	char *token = _strtok(cmd, " ");
-	char *args[BUF_SIZE];
+	char *token = _strtok(cmd, " "), *args[BUF_SIZE];
 
-	if (token != NULL)
+	args[0] = token;
+	while (token != NULL)
 	{
-		for (i = 0; builtInCommand[i].name[0] != '\0'; i++)
+		token = _strtok(NULL, " ");
+		if (token != NULL)
 		{
-			if (_strcmp(token, builtInCommand[i].name) == 0)
+			char *flag = flagChecker(&token);
+
+			if (flag == NULL)
 			{
-				args[0] = strdup(token);
-				args[1] = NULL;
-				builtInCommand[i].func(argc, args);
-				free(args[0]);
+				printf("Invalid option -- '%s'\n", token);
 				return;
 			}
+			args[i] = flag;
+			i++;
 		}
-		/* code for non built-in commands here */
-		print_str("coming soon ...");
 	}
+	for (i = 0; builtInCommand[i].name[0] != '\0'; i++)
+	{
+		if (_strcmp(token, builtInCommand[i].name) == 0)
+		{
+			builtInCommand[i].func(argc, args);
+			return;
+		}
+	}
+	/* code for non built-in commands here */
+	print_str("coming soon ...");
+}
+
+char *flagChecker(char **args)
+{
+	int i, j, k;
+	char *flags[BUF_SIZE] = {"-l", "-a", "-R", "--help"}; /* more */
+	for (i = 0; args[i] != NULL; i++)
+	{
+		k = sizeof(flags) / sizeof(flags[0]);
+		for (j = 0; j < k; j++)
+		{
+			if (_strcmp(args[i], flags[j]) == 0)
+				*args = _strtok(NULL, " "); /* doesn't even check if _strcmp return a positive or negative num yet */
+		}
+	}
+	return (*args);
 }
 
 /**
