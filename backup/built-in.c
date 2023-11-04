@@ -6,6 +6,8 @@ void executeLS(int argc, char *argv[])
 	extern char **environ;
 	int child_pid;
 	int i;
+	/*(void)argc;*/
+	/*Why is argc set to void. You used it below*/
 
 
 	/* Handle command-line options using flagChecker function */
@@ -34,12 +36,8 @@ void executeLS(int argc, char *argv[])
 		_exit(EXIT_FAILURE);
 	}
 	else if (child_pid < 0)
-	{
-		perror("fork failed");
-		return;
-	}
-	else
-	{
+		perror("fork");
+	else {
 		/* Parent process */
 		int status;
 		waitpid(child_pid, &status, 0);

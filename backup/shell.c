@@ -107,16 +107,8 @@ int main(int argc, char *argv[])
 		bytes_read = getline(&input, &input_size, stdin);
 		if (bytes_read == -1)
 		{
-
-			if (feof(stdin))
-			{
-				/*free(input);*/
-				print_str("\n");
-				break;
-			}
-
 			perror("Error getting line");
-			exit(EXIT_SUCCESS);
+			exit(EXIT_FAILURE);
 		}
 		/* Remove trailing newline */
 		input[bytes_read - 1] = '\0';
