@@ -1,4 +1,5 @@
 #include "main.h"
+#include <stdbool.h>
 
 /**
  * argChecker - desc
@@ -13,9 +14,17 @@ void argChecker(int argc, char *cmd)
 	    /* Add more ... */
 	};
 	int i;
-	char *token = _strtok(cmd, " ");
+	char *token;
 	char **args = malloc(BUF_SIZE * sizeof(char *));
 	char *command;
+
+	if (cmd == NULL || *cmd == '\0')
+	{
+		perror("No command entered.\n"); /*Check for if seg fault is from empty cmd-----------*/
+		exit(EXIT_FAILURE);
+	}
+
+	token = _strtok(cmd, " ");
 
 	if (args == NULL)
 	{
@@ -25,26 +34,15 @@ void argChecker(int argc, char *cmd)
 
 	i = 0;
 
-	args[i] = token;
 	while (token != NULL)
 	{
-		token = _strtok(NULL, " ");
-		if (token != NULL)
-		{
-			char *flag = flagChecker(&args[i]); /*Previous value = &token, in place of &args*/
-
-			if (flag == NULL)
-			{
-				printf("Invalid option -- '%s'\n", token);
-				free(args);
-				return;
-			}
-
-			args[++i] = flag;
-		}
+		args[i++] = token;
+		token = _strtok(NULL, " "); /*Get next token*/
 	}
 
+	args[i] = NULL; /*Null-terminate the args array*/
 	command = args[0];
+
 
 	for (i = 0; builtInCommand[i].name != NULL; i++)
 	{
@@ -61,28 +59,23 @@ void argChecker(int argc, char *cmd)
 	free(args);
 }
 
-char *flagChecker(char **args)
+bool flagChecker(const char *token)
 {
 	size_t i;
 	const char *flags[] = {"-l", "-a", "-R", "--help"}; /* more */
-	char *token = _strtok(NULL, " ");
 
-	if (token == NULL)
-	{
-		printf("Missing argument for option -- '%s'\n", args[-1]);
-		return NULL;
-	}
 
-	for (i = 0; i < sizeof(flags) / sizeof(flags[0]); i++)
+	for (i = 0; i < (sizeof(flags) / sizeof(flags[0])); i++)
 	{
 		if (_strcmp(token, flags[i]) == 0)
 		{
-			return token;
+			return true; /*valid flag found*/
 		}
 	}
 
+	printf("Missing argument for option -- '%s'\n", token);
 	printf("Invalid option -- '%s'\n", token);
-	return NULL;
+	return false; /*no valid flag found*/
 }
 
 /**
@@ -119,12 +112,12 @@ int main(int argc, char *argv[])
 			exit(EXIT_SUCCESS);
 		}
 		/* Remove trailing newline */
-		input[bytes_read - 1] = '\0';
+		if (input[bytes_read - 1] == '\n')
+			input[bytes_read - 1] = '\0';
 
 		if (_strcmp(input, "exit") == 0)
         	{
-			free(input); /* Free allocated memory before exiting */
-			exit(EXIT_SUCCESS);
+			break;
 		}
 
 		argChecker(argc, input);

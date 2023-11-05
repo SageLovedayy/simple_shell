@@ -7,6 +7,8 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
+#include <stdbool.h>
+
 #include <string.h>
 
 #define BUF_SIZE 1024
@@ -22,7 +24,7 @@ typedef struct
 } BuiltInCommand;
 
 void argChecker(int argc, char *cmd);
-char *flagChecker(char **args);
+bool flagChecker(const char *token);
 
 void executeLS(int argc, char *argv[]);
 void handleEnvCommand(int argc, char *argv[]);
@@ -31,6 +33,7 @@ size_t print_str(const char *str);
 size_t _strlen(const char *s);
 char *_strpbrk(char *s, const char *accept);
 char *_strtok(char *str, const char *delim);
-int _strcmp(char *s1, const char *s2);
+int _strcmp(const char *s1, const char *s2);
+size_t _strspn(const char *s, const char *accept);
 
 #endif /* _MAIN_H_ */
