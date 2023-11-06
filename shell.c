@@ -18,11 +18,11 @@ void argChecker(int argc, char *cmd)
 	char **args = malloc(BUF_SIZE * sizeof(char *));
 	char *command;
 
-	if (cmd == NULL || *cmd == '\0')
+	if (cmd == NULL || *cmd == '\0' || *cmd == ' ')
 	{
-		perror("No command entered.\n"); /*Check for if seg fault is from empty cmd-----------*/
-		exit(EXIT_FAILURE);
+		return;
 	}
+
 
 	token = _strtok(cmd, " ");
 
