@@ -3,7 +3,6 @@
 void executeLS(int argc, char *argv[])
 {
 	/* Create an array to store the environment variables */
-	extern char **environ;
 	int child_pid;
 	int i;
 
@@ -50,6 +49,13 @@ void executeLS(int argc, char *argv[])
 
 void handleEnvCommand(int argc, char *argv[])
 {
-	(void)argc;
+	char **env;
 	(void)argv;
+	(void)argc;
+
+	/* Iterate through the environment variables and print them */
+	for (env = environ; *env != NULL; env++)
+	{
+		printf("%s\n", *env);
+	}
 }

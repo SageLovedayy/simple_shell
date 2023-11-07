@@ -23,8 +23,12 @@ void argChecker(int argc, char *cmd)
 		return;
 	}
 
-
 	token = _strtok(cmd, " ");
+
+	if (_strncmp("/bin/", token, 5) == 0)
+	{
+		token = token + 5;
+	}
 
 	if (args == NULL)
 	{
@@ -54,7 +58,7 @@ void argChecker(int argc, char *cmd)
 		}
 	}
 	/* code for non built-in commands here */
-	print_str("coming soon ...");
+	printf("./hsh: 1: %s: not found\n", command);
 
 	free(args);
 }

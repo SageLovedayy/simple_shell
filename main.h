@@ -13,6 +13,8 @@
 
 #define BUF_SIZE 1024
 
+extern char **environ;
+
 typedef void (*CommandFunction)(int argc, char *argv[]);
 
 typedef struct
@@ -35,5 +37,6 @@ char *_strpbrk(char *s, const char *accept);
 char *_strtok(char *str, const char *delim);
 int _strcmp(const char *s1, const char *s2);
 size_t _strspn(const char *s, const char *accept);
+int _strncmp(const char *s1, const char *s2, int n);
 
 #endif /* _MAIN_H_ */
