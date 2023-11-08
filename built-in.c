@@ -1,31 +1,31 @@
 #include "main.h"
 
+/**
+ * executeLS - execute command that list directory contents
+ * @argc: Argument count
+ * @argv: Argument vector
+ * Return: void
+ */
 void executeLS(int argc, char *argv[])
 {
 	/* Create an array to store the environment variables */
 	int child_pid;
 	int i;
 
-
 	/* Handle command-line options using flagChecker function */
 	for (i = 1; i < argc; i++)
 	{
 		if (!flagChecker(argv[i]))
 		{
-			/* Handle invalid option */
-			printf("Invalid option -- '%s'\n", argv[i]);
+			printf("Invalid option -- '%s'\n", argv[i]);	/* Handle invalid option */
 			_exit(EXIT_FAILURE);
 		}
-
 		else
 		{
 			/* Process the valid flag (dummy demonstration: just print it) */
 			printf("Found flag: %s\n", argv[i]);
-
-		/* We can modify ls_args array or perform other actions based on the flag*/
 		}
 	}
-
 	child_pid = fork();
 	if  (child_pid == 0)
 	{
@@ -43,16 +43,30 @@ void executeLS(int argc, char *argv[])
 	{
 		/* Parent process */
 		int status;
+
 		waitpid(child_pid, &status, 0);
 	}
 }
 
+/**
+ * executeCD - Execute command that change directory
+ * @argc: Argument count
+ * @argv: Argument vector
+ * Return: void
+ */
 void executeCD(int argc, char *argv[])
 {
 	(void)argc;
 	(void)argv;
 }
 
+/**
+ * handleEnvCommand - Executes command that run a program
+ *	in a modified environment
+ * @argc: Argument count
+ * @argv: Argument vector
+ * Return: void
+ */
 void handleEnvCommand(int argc, char *argv[])
 {
 	char **env;

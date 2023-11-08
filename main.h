@@ -15,15 +15,19 @@
 
 extern char **environ;
 
-typedef void (*CommandFunction)(int argc, char *argv[]);
-
-typedef struct
+/**
+ * struct BuiltInCommand - Represents a built-in shell command
+ * @name: The name of the built-in command.
+ * @CommandFunction: A function pointer to handle the command.
+ */
+struct BuiltInCommand
 {
 	/* Name of the built-in command */
 	const char *name;
 	/* Function pointer for handling the command */
-	CommandFunction func;
-} BuiltInCommand;
+	void (*CommandFunction)(int argc, char *argv[]);
+};
+typedef struct BuiltInCommand commandStruct;
 
 char *argChecker(int argc, char *cmd);
 bool flagChecker(const char *token);

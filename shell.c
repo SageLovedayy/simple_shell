@@ -8,7 +8,7 @@
  */
 char *argChecker(int argc, char *cmd)
 {
-	BuiltInCommand builtInCommand[] = {
+	commandStruct builtInCommand[] = {
 	    {"ls", executeLS},
 	    {"env", handleEnvCommand},
 	    {"cd", executeCD},
@@ -63,9 +63,9 @@ char *argChecker(int argc, char *cmd)
 	{
 		if (_strcmp(command, builtInCommand[i].name) == 0)
 		{
-			builtInCommand[i].func(argc, args);
+			builtInCommand[i].CommandFunction(argc, args);
 			free(args);
-			return (command);
+			return (NULL);
 		}
 	}
 
@@ -73,6 +73,11 @@ char *argChecker(int argc, char *cmd)
 	return (command);
 }
 
+/**
+ * flagChecker - confirm character token parsed for flags
+ * @token: token
+ * Return: true if token is flag and false otherwise
+ */
 bool flagChecker(const char *token)
 {
 	size_t i;
@@ -83,13 +88,13 @@ bool flagChecker(const char *token)
 	{
 		if (_strcmp(token, flags[i]) == 0)
 		{
-			return true; /*valid flag found*/
+			return (true); /*valid flag found*/
 		}
 	}
 
 	printf("Missing argument for option -- '%s'\n", token);
 	printf("Invalid option -- '%s'\n", token);
-	return false; /*no valid flag found*/
+	return (false); /*no valid flag found*/
 }
 
 /**
@@ -103,9 +108,6 @@ int main(int argc, char *argv[])
 	char *input = NULL, *result;
 	ssize_t bytes_read;
 	size_t input_size = 0;
-
-	(void)argc;
-	(void)argv;
 
 	while (1)
 	{
@@ -130,7 +132,7 @@ int main(int argc, char *argv[])
 			input[bytes_read - 1] = '\0';
 
 		if (_strcmp(input, "exit") == 0)
-        	{
+		{
 			break;
 		}
 
