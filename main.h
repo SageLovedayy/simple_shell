@@ -25,7 +25,7 @@ typedef struct
 	CommandFunction func;
 } BuiltInCommand;
 
-void argChecker(int argc, char *cmd);
+char *argChecker(int argc, char *cmd);
 bool flagChecker(const char *token);
 
 void executeLS(int argc, char *argv[]);
@@ -39,5 +39,6 @@ char *_strpbrk(char *s, const char *accept);
 int _strcmp(const char *s1, const char *s2);
 size_t _strspn(const char *s, const char *accept);
 int _strncmp(const char *s1, const char *s2, int n);
+int _atoi(char *s);
 
 #endif /* _MAIN_H_ */

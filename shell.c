@@ -2,9 +2,11 @@
 
 /**
  * argChecker - desc
+ * @argc: argument count
  * @cmd: command
+ * Return: Returns the command on success, NULL on failure
  */
-void argChecker(int argc, char *cmd)
+char *argChecker(int argc, char *cmd)
 {
 	BuiltInCommand builtInCommand[] = {
 	    {"ls", executeLS},
@@ -20,7 +22,7 @@ void argChecker(int argc, char *cmd)
 
 	if (cmd == NULL || *cmd == '\0' || *cmd == ' ' || *cmd == '\t')
 	{
-		return;
+		return (NULL);
 	}
 
 	token = _strtok(cmd, " ");
@@ -33,7 +35,7 @@ void argChecker(int argc, char *cmd)
 	{
 		if (argc > 1)
 		{
-			status = atoi(args[1]);
+			status = _atoi(args[1]);
 			exit(status);
 		}
 		exit(0);
@@ -63,13 +65,12 @@ void argChecker(int argc, char *cmd)
 		{
 			builtInCommand[i].func(argc, args);
 			free(args);
-			return;
+			return (command);
 		}
 	}
-	/* code for non built-in commands here */
-	printf("./hsh: 1: %s: not found\n", command);
 
 	free(args);
+	return (command);
 }
 
 bool flagChecker(const char *token)
@@ -99,7 +100,7 @@ bool flagChecker(const char *token)
  */
 int main(int argc, char *argv[])
 {
-	char *input = NULL;
+	char *input = NULL, *result;
 	ssize_t bytes_read;
 	size_t input_size = 0;
 
@@ -133,7 +134,9 @@ int main(int argc, char *argv[])
 			break;
 		}
 
-		argChecker(argc, input);
+		result = argChecker(argc, input);
+		if (result != NULL)
+			printf("%s: 1: %s: not found\n", argv[0], result);
 	}
 	free(input);
 
