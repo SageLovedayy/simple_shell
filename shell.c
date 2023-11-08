@@ -13,7 +13,7 @@ void argChecker(int argc, char *cmd)
 	    {NULL, NULL},
 	    /* Add more ... */
 	};
-	int i;
+	int i, status;
 	char *token;
 	char **args = malloc(BUF_SIZE * sizeof(char *));
 	char *command;
@@ -28,6 +28,15 @@ void argChecker(int argc, char *cmd)
 	if (_strncmp("/bin/", token, 5) == 0)
 	{
 		token = token + 5;
+	}
+	if (_strcmp(token, "exit") == 0)
+	{
+		if (argc > 1)
+		{
+			status = atoi(args[1]);
+			exit(status);
+		}
+		exit(0);
 	}
 
 	if (args == NULL)
