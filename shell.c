@@ -1,5 +1,4 @@
 #include "main.h"
-#include <stdbool.h>
 
 /**
  * argChecker - desc
@@ -10,6 +9,7 @@ void argChecker(int argc, char *cmd)
 	BuiltInCommand builtInCommand[] = {
 	    {"ls", executeLS},
 	    {"env", handleEnvCommand},
+	    {"cd", executeCD},
 	    {NULL, NULL},
 	    /* Add more ... */
 	};
@@ -18,7 +18,7 @@ void argChecker(int argc, char *cmd)
 	char **args = malloc(BUF_SIZE * sizeof(char *));
 	char *command;
 
-	if (cmd == NULL || *cmd == '\0' || *cmd == ' ')
+	if (cmd == NULL || *cmd == '\0' || *cmd == ' ' || *cmd == '\t')
 	{
 		return;
 	}
@@ -108,7 +108,8 @@ int main(int argc, char *argv[])
 
 	while (1)
 	{
-		print_str("#cisfun$ ");
+		if (isatty(STDIN_FILENO))
+			print_str("#cisfun$ ");
 
 		bytes_read = getline(&input, &input_size, stdin);
 		if (bytes_read == -1)
@@ -117,7 +118,6 @@ int main(int argc, char *argv[])
 			if (feof(stdin))
 			{
 				/*free(input);*/
-				print_str("\n");
 				break;
 			}
 
@@ -135,7 +135,6 @@ int main(int argc, char *argv[])
 
 		argChecker(argc, input);
 	}
-
 	free(input);
 
 	return (0);

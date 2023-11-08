@@ -47,6 +47,12 @@ void executeLS(int argc, char *argv[])
 	}
 }
 
+void executeCD(int argc, char *argv[])
+{
+	(void)argc;
+	(void)argv;
+}
+
 void handleEnvCommand(int argc, char *argv[])
 {
 	char **env;
