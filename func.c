@@ -31,10 +31,9 @@ size_t print_str(const char *str)
 char *_strtok(char *str, const char *delim)
 {
 	/* Static variable to maintain state between calls */
-	static char *token;
+	static char *token = NULL;
 	char *result;
 
-	token = NULL;
 	/* Validate delimiter*/
 	if (delim == NULL)
 		return (NULL);
