@@ -92,8 +92,8 @@ bool flagChecker(const char *token)
 		}
 	}
 
-	printf("Missing argument for option -- '%s'\n", token);
-	printf("Invalid option -- '%s'\n", token);
+	print_str("Missing argument for option -- '%s'\n", token);
+	print_str("Invalid option -- '%s'\n", token);
 	return (false); /*no valid flag found*/
 }
 
@@ -105,14 +105,14 @@ bool flagChecker(const char *token)
  */
 int main(int argc, char *argv[])
 {
-	char *input = NULL, *result;
+	char *input = NULL, *result, *prompt = "#cisfun$ ";
 	ssize_t bytes_read;
 	size_t input_size = 0;
 
 	while (1)
 	{
 		if (isatty(STDIN_FILENO))
-			print_str("#cisfun$ ");
+			print_str("%s", prompt);
 
 		bytes_read = getline(&input, &input_size, stdin);
 		if (bytes_read == -1)
@@ -138,7 +138,7 @@ int main(int argc, char *argv[])
 
 		result = argChecker(argc, input);
 		if (result != NULL)
-			printf("%s: 1: %s: not found\n", argv[0], result);
+			print_str("%s: 1: %s: not found\n", argv[0], result);
 	}
 	free(input);
 

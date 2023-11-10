@@ -8,18 +8,50 @@
 /********************************/
 
 /**
- *print_str - prints a string to the STDOUT
- *@str: string to print out
- *Return: number of char printed
+ * print_str - prints a string to the STDOUT
+ * @format: formatted string containing specifiers
+ * Return: number of char printed
  */
-size_t print_str(const char *str)
+int print_str(const char *format, ...)
 {
-	size_t i;
+	va_list args;
+	int count = 0;
 
-	write(1, str, _strlen(str));
-	i = _strlen(str);
+	va_start(args, format);
 
-	return (i);
+	while (*format != '\0')
+	{
+		if (*format == '%')
+		{
+			format++;
+			switch (*format)
+			{
+			case 's':
+			{
+				const char *str = va_arg(args, const char *);
+
+				count += print_str(str);
+				break;
+			}
+			/* Add more cases for other specifiers as needed */
+			default:
+				/* Handle unsupported specifier or just ignore it */
+				write(1, "%", 1);
+				count++;
+				break;
+			}
+		}
+		else
+		{
+			write(1, format, 1);
+			count++;
+		}
+
+		format++;
+	}
+	va_end(args);
+
+	return (count);
 }
 
 /**

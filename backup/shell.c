@@ -58,7 +58,7 @@ void argChecker(int argc, char *cmd)
 		}
 	}
 	/* code for non built-in commands here */
-	printf("./hsh: 1: %s: not found\n", command);
+	print_str("./hsh: 1: %s: not found\n", command);
 
 	free(args);
 }
@@ -77,8 +77,8 @@ bool flagChecker(const char *token)
 		}
 	}
 
-	printf("Missing argument for option -- '%s'\n", token);
-	printf("Invalid option -- '%s'\n", token);
+	print_str("Missing argument for option -- '%s'\n", token);
+	print_str("Invalid option -- '%s'\n", token);
 	return false; /*no valid flag found*/
 }
 

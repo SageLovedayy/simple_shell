@@ -17,12 +17,12 @@ void executeLS(int argc, char *argv[])
 		if (flag == NULL)
 		{
 			/* Handle invalid option */
-			printf("Invalid option -- '%s'\n", argv[i]);
+			print_str("Invalid option -- '%s'\n", argv[i]);
 			_exit(EXIT_FAILURE);
 		}
 
 		/* Process the valid flag (dummy demonstration: just print it) */
-		printf("Found flag: %s\n", flag);
+		print_str("Found flag: %s\n", flag);
 
 		/* We can modify ls_args array or perform other actions based on the flag*/
 	}

@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <stdarg.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 
@@ -37,7 +38,7 @@ void executeCD(int argc, char *argv[]);
 void handleEnvCommand(int argc, char *argv[]);
 char *_strtok(char *str, const char *delim);
 
-size_t print_str(const char *str);
+int print_str(const char *format, ...);
 size_t _strlen(const char *s);
 char *_strpbrk(char *s, const char *accept);
 int _strcmp(const char *s1, const char *s2);

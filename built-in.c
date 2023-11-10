@@ -17,13 +17,13 @@ void executeLS(int argc, char *argv[])
 	{
 		if (!flagChecker(argv[i]))
 		{
-			printf("Invalid option -- '%s'\n", argv[i]);	/* Handle invalid option */
+			print_str("Invalid option -- '%s'\n", argv[i]);	/* Handle invalid option */
 			_exit(EXIT_FAILURE);
 		}
 		else
 		{
 			/* Process the valid flag (dummy demonstration: just print it) */
-			printf("Found flag: %s\n", argv[i]);
+			print_str("Found flag: %s\n", argv[i]);
 		}
 	}
 	child_pid = fork();
@@ -141,7 +141,7 @@ void executeCD(int argc, char *argv[])
 	else
 	{
 		/* Invalid usage of 'cd' command */
-		printf("cd: too many arguments\n");
+		print_str("cd: too many arguments\n");
 	}
 }
 
@@ -161,6 +161,6 @@ void handleEnvCommand(int argc, char *argv[])
 	/* Iterate through the environment variables and print them */
 	for (env = environ; *env != NULL; env++)
 	{
-		printf("%s\n", *env);
+		print_str("%s\n", *env);
 	}
 }
