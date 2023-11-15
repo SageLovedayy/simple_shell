@@ -7,13 +7,20 @@
 #include <stdarg.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <limits.h>
 
 #include <stdbool.h>
+#include <errno.h>
+
+#include <sys/stat.h>
+#include <signal.h>
+#include <fcntl.h>
 
 #include <string.h>
 
 #define BUF_SIZE 1024
 #define FLUSH_BUFFER -1
+#define CUSTOM_FD_OFFSET 9 /*For adjusting fd offset*/
 
 extern char **environ;
 
@@ -74,7 +81,7 @@ typedef struct pseudoArgs
 } commandInfo;
 
 /*Init commandInfo pseudoArg vals to NULL for ptrs, 0 for other data types*/
-#define COMMAND_INFO_INIT\
+#define COMMAND_INFO_INIT \
 {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, \
 		0, 0, 0, 0, 0, 0, 0, 0, 0}
 
@@ -92,7 +99,29 @@ typedef struct BuiltInCommand
 	int (*CommandFunction)(commandInfo *);
 } commandStruct;
 
+/*=========ENTRY FUNCTION===================*/
+int main(int argc, char **argv);
+int runShell(commandInfo *shellInfo, char **argv);
 
+/*==========WRITE FUNCTIONS=================*/
+int _fprintf(int fd, const char *format, ...);
+int print_str(const char *format, ...);
+int _putchar(char c);
+/*===========ERROR WRITE FUNCTIONS=========*/
+int print_error_char(char character);
+
+/*===========UTILITY FUNCTIONS==============*/
+char *_strdup(const char *str);
+int _strlen(char *s);
+
+/*=========ENVIRONMENT LIST FUNCTIONS=======*/
+int populateEnvironmentList(commandInfo *shellInfo);
+
+/*=========LINKED LIST FUNCTIONS============*/
+listNode *addNodeEnd(listNode **head, const char *str, int num);
+
+/*=========MEMORY AND REALLOC================*/
+char *_memset(char *dest, char byteVal, unsigned int numBytes);
 
 
 /*=================================================================*/
@@ -107,7 +136,6 @@ void handleEnvCommand(int argc, char *argv[]);
 char *_strtok(char *str, const char *delim);
 
 int print_str(const char *format, ...);
-size_t _strlen(const char *s);
 char *_strpbrk(char *s, const char *accept);
 int _strcmp(const char *s1, const char *s2);
 size_t _strspn(const char *s, const char *accept);
