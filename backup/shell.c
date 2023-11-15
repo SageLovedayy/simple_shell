@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
 
 	while (1)
 	{
-		print_str("#cisfun$ ");
+		print_str("$ ");
 
 		bytes_read = _getline(&input, &input_size, stdin);
 		if (bytes_read == -1)

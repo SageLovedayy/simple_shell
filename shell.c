@@ -1,146 +1,110 @@
 #include "main.h"
 
 /**
- * argChecker - desc
+ * main - Entry point
  * @argc: argument count
- * @cmd: command
- * Return: Returns the command on success, NULL on failure
+ * @argv: argument vectors
+ * Return: exit stat
  */
-char *argChecker(int argc, char *cmd)
+int main(int argc, char **argv)
 {
-	commandStruct builtInCommand[] = {
-	    {"ls", executeLS},
-	    {"env", handleEnvCommand},
-	    {"cd", executeCD},
-	    {NULL, NULL},
-	    /* Add more ... */
-	};
-	int i, status;
-	char *token;
-	char **args = malloc(BUF_SIZE * sizeof(char *));
-	char *command;
+	/*Create array of structures of commandInfo & inits it to COMMAND_INFO_INIT*/
+	commandInfo shellInfo[] = {COMMAND_INFO_INIT};
+	/*unique fd for custom stream*/
+	int fileDescriptor = STDERR_FILENO + CUSTOM_FD_OFFSET;
 
-	if (cmd == NULL || *cmd == '\0' || *cmd == ' ' || *cmd == '\t')
+	if (argc == 2)
 	{
-		return (NULL);
-	}
-
-	token = _strtok(cmd, " ");
-
-	if (_strncmp("/bin/", token, 5) == 0)
-	{
-		token = token + 5;
-	}
-	if (_strcmp(token, "exit") == 0)
-	{
-		if (argc > 1)
+		fileDescriptor = open(argv[1], O_RDONLY);
+		if (fileDescriptor == -1)
 		{
-			status = _atoi(args[1]);
-			exit(status);
+			if (errno == EACCES)
+				exit(126); /*indicating no execute permission access*/
+			if (errno == ENOENT)
+			{
+				_fprintf(STDERR_FILENO, "%s: No such file or directory\n", argv[0]);
+				fflush(stderr);
+				exit(127); /*cmd not found in PATH and not a built-in*/
+			}
+			return (EXIT_FAILURE);
 		}
-		exit(0);
+		shellInfo->input_file_descriptor = fileDescriptor;
 	}
 
-	if (args == NULL)
-	{
-		perror("Memory aLlocation error");
-		exit(EXIT_FAILURE);
-	}
 
-	i = 0;
+	populateEnvironmentList(shellInfo);
+	runShell(shellInfo, argv);
 
-	while (token != NULL)
-	{
-		args[i++] = token;
-		token = _strtok(NULL, " "); /*Get next token*/
-	}
-
-	args[i] = NULL; /*Null-terminate the args array*/
-	command = args[0];
-
-
-	for (i = 0; builtInCommand[i].name != NULL; i++)
-	{
-		if (_strcmp(command, builtInCommand[i].name) == 0)
-		{
-			builtInCommand[i].CommandFunction(argc, args);
-			free(args);
-			return (NULL);
-		}
-	}
-
-	free(args);
-	return (command);
+	return (EXIT_SUCCESS);
 }
 
-/**
- * flagChecker - confirm character token parsed for flags
- * @token: token
- * Return: true if token is flag and false otherwise
- */
-bool flagChecker(const char *token)
-{
-	size_t i;
-	const char *flags[] = {"-l", "-a", "-R", "--help"}; /* more */
 
-
-	for (i = 0; i < (sizeof(flags) / sizeof(flags[0])); i++)
-	{
-		if (_strcmp(token, flags[i]) == 0)
-		{
-			return (true); /*valid flag found*/
-		}
-	}
-
-	print_str("Missing argument for option -- '%s'\n", token);
-	print_str("Invalid option -- '%s'\n", token);
-	return (false); /*no valid flag found*/
-}
 
 /**
- * main - desc
- * @argc: argument count
- * @argv: agrgument vector
- * Return: Always 0 o success
+ * runShell - add descr
+ * @shellInfo: Pointer to the commandInfo structure.
+ * @argv: Command-line arguments.
+ * Return: Exit status.
  */
-int main(int argc, char *argv[])
+int runShell(commandInfo *shellInfo, char **argv)
 {
-	char *input = NULL, *result, *prompt = "#cisfun$ ";
-	ssize_t bytes_read;
-	size_t input_size = 0;
+	ssize_t inputResult = 0;
+	int builtinReturn = 0;
+	char *prompt = "$ ";
 
-	while (1)
+	while (inputResult != -1 && builtinReturn != -2)
 	{
-		if (isatty(STDIN_FILENO))
+		clearCommandInfo(shellInfo); /*We can also try commandinfoinit*/
+
+		if ((isatty(STDIN_FILENO) && shellInfo->input_file_descriptor <= 2))
 			print_str("%s", prompt);
 
-		bytes_read = getline(&input, &input_size, stdin);
-		if (bytes_read == -1)
+		print_error_char(FLUSH_BUFFER);
+		inputResult = getInput(shellInfo);
+
+		if (inputResult != -1)
 		{
-
-			if (feof(stdin))
-			{
-				/*free(input);*/
-				break;
-			}
-
-			perror("Error getting line");
-			exit(EXIT_SUCCESS);
+			setInfo(shellInfo, argv);
+			builtinReturn = findBuiltinCmd(shellInfo);
+			if (builtinReturn == -1)
+				executeExternalCmd(shellInfo);
 		}
-		/* Remove trailing newline */
-		if (input[bytes_read - 1] == '\n')
-			input[bytes_read - 1] = '\0';
+		else if ((isatty(STDIN_FILENO) && shellInfo->input_file_descriptor <= 2))
+			_putchar('\n');
 
-		if (_strcmp(input, "exit") == 0)
-		{
-			break;
-		}
-
-		result = argChecker(argc, input);
-		if (result != NULL)
-			print_str("%s: 1: %s: not found\n", argv[0], result);
+		/*freeCommandInfo(shellInfo, 0);*/
 	}
-	free(input);
 
-	return (0);
+	/*writeHistory(shellInfo);*/
+	/*freeCommandInfo(shellInfo, 1);*/
+	if (!((isatty(STDIN_FILENO) && shellInfo->input_file_descriptor <= 2)) &&
+	shellInfo->commandExecStatus)
+		exit(shellInfo->commandExecStatus);
+
+	if (builtinReturn == -2)
+	{
+		if (shellInfo->error_number == -1)
+			exit(shellInfo->commandExecStatus);
+		exit(shellInfo->error_number);
+	}
+	return (builtinReturn);
 }
+
+
+/*==================================================*/
+/*SHELLINFO COMMANDS*/
+
+/**
+ * clear_info - initializes struct
+ * @info: add descr
+ */
+
+void clearCommandInfo(commandInfo *shellInfo)
+{
+	shellInfo->current_argument = NULL;
+	shellInfo->command_arguments = NULL;
+	shellInfo->executable_path = NULL;
+	shellInfo->argument_count = 0;
+}
+
+
