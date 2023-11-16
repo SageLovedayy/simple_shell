@@ -4,8 +4,7 @@
  * copy_string - Copies a string from source to destination.
  * @destination: The destination buffer.
  * @source: The source string.
- *
- * Returns: Pointer to the destination buffer.
+ * Return: Pointer to the destination buffer.
  */
 char *copy_string(char *destination, const char *source)
 {
@@ -21,14 +20,14 @@ char *copy_string(char *destination, const char *source)
 	}
 
 	destination[index] = '\0';
-	return destination;
+	return (destination);
 }
 
 /**
  * duplicate_string - Duplicates a string.
  * @str: The string to duplicate.
  *
- * Returns: Pointer to the duplicated string.
+ * Return: Pointer to the duplicated string.
  */
 char *duplicate_string(const char *str)
 {
@@ -36,7 +35,7 @@ char *duplicate_string(const char *str)
 	char *duplicate;
 
 	if (str == NULL)
-		return NULL;
+		return (NULL);
 
 	while (*str++)
 		length++;
@@ -44,19 +43,19 @@ char *duplicate_string(const char *str)
 	duplicate = malloc(sizeof(char) * (length + 1));
 
 	if (!duplicate)
-		return NULL;
+		return (NULL);
 
 	for (length++; length--;)
 		duplicate[length] = *--str;
 
-	return duplicate;
+	return (duplicate);
 }
 
 /**
  * print_string - Prints a string to the standard output.
  * @str: The string to be printed.
  *
- * Returns: Nothing.
+ * Return: Nothing.
  */
 void print_string(char *str)
 {
@@ -93,7 +92,7 @@ int write_character(char character)
 	if (character != FLUSH_BUFFER)
 		output_buffer[buffer_index++] = character;
 
-	return 1;
+	return (1);
 }
 
 
@@ -126,32 +125,5 @@ char *_strncpy(char *dest, char *src, int n)
 			j++;
 		}
 	}
-	return (s);
-}
-
-/**
- **_strncat - concatenates two strings
- *@dest: the first string
- *@src: the second string
- *@n: the amount of bytes to be maximally used
- *Return: the concatenated string
- */
-char *_strncat(char *dest, char *src, int n)
-{
-	int i, j;
-	char *s = dest;
-
-	i = 0;
-	j = 0;
-	while (dest[i] != '\0')
-		i++;
-	while (src[j] != '\0' && j < n)
-	{
-		dest[i] = src[j];
-		i++;
-		j++;
-	}
-	if (j < n)
-		dest[i] = '\0';
 	return (s);
 }
