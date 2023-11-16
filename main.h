@@ -23,9 +23,9 @@
 #define FLUSH_BUFFER -1
 
 
-#define CMD_OR		1
-#define CMD_AND		2
-#define CMD_CHAIN	3
+#define CD_OR		1
+#define CD_AND		2
+#define CD_CH	3
 
 extern char **environ;
 
@@ -109,20 +109,20 @@ int main(int argc, char **argv);
 
 int print_str(const char *format, ...);
 int _putchar(char c);
-char *dupChars(char *pathstr, int start, int stop);
+char *charDup(char *pathstr, int start, int stop);
 
-void print_error(commandInfo *shellInfo, char *estr);
+void print_error(commandInfo *shellInfo, char *errorStr);
 int print_error_char(char character);
 int _fprintf(int fd, const char *format, ...);
-void _eputs(char *str);
-int print_d(int input, int fd);
+void errorPuts(char *str);
+int custPrint(int input, int fd);
 int _eputchar(char c);
 
-listNode *add_node_end(listNode **head, const char *str, int num);
+listNode *addNodeEnd(listNode **head, const char *str, int num);
 
 int populateEnvironmentList(commandInfo *shellInfo);
-char *_getenv(commandInfo *shellInfo, const char *name);
-char **get_environ(commandInfo *shellInfo);
+char *retEnv(commandInfo *shellInfo, const char *name);
+char **retEnviron(commandInfo *shellInfo);
 
 char *findPath(commandInfo *shellInfo, char *pathstr, char *cmd);
 void executeExternalCmd(commandInfo *shellInfo);
@@ -145,44 +145,44 @@ int findBuiltinCmd(commandInfo *shellInfo);
 char *_strtok(char *str, const char *delim);
 char *_strpbrk(char *s, const char *accept);
 size_t _strspn(const char *s, const char *accept);
-int is_delim(char c, char *delim);
+int checkDelim(char c, char *delim);
 char **strtow(char *str, char *d);
 
-int _putfd(char c, int fd);
-int _putsfd(char *str, int fd);
+int fdWrite(char c, int fd);
+int fdWrites(char *str, int fd);
 
-int is_regular_file(const char *path);
+int checkReg(const char *path);
 int isCmd(commandInfo *shellInfo, char *path);
 
 int replaceAlias(commandInfo *shellInfo);
 void replaceVars(commandInfo *shellInfo);
 char *findReplacementValue(commandInfo *shellInfo, const char *variable);
 void replaceVars(commandInfo *shellInfo);
-char *_strchr(char *s, char c);
+char *stCr(char *s, char c);
 
 char *itoa1(long int num, int base, int flags);
 
-void remove_comments_in_string(char *buffer);
+void rmStringComment(char *buffer);
 void sigintHandler(__attribute__((unused)) int sig_num);
 ssize_t inputBuf(commandInfo *shellInfo, char **buf, size_t *bufferLen);
 
-int is_chain(commandInfo *shellInfo, char *buf, size_t *p);
-void check_chain(commandInfo *shellInfo, char *buf, size_t *p
+int isChn(commandInfo *shellInfo, char *buf, size_t *p);
+void chkChain(commandInfo *shellInfo, char *buf, size_t *p
 , size_t i, size_t len);
-int _getline(commandInfo *shellInfo, char **ptr, size_t *length);
+int getLine(commandInfo *shellInfo, char **ptr, size_t *length);
 
 char *_strncpy(char *dest, char *src, int n);
 char *_strncat(char *dest, char *src, int n);
 
 
-ssize_t read_buf(commandInfo *shellInfo, char *buf, size_t *i);
+ssize_t readBuffer(commandInfo *shellInfo, char *buf, size_t *i);
 void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
 
-void fork_cmd(commandInfo *shellInfo);
-char **list_to_strings(listNode *head);
+void fkCommand(commandInfo *shellInfo);
+char **toStrFrmList(listNode *head);
 
-size_t list_len(const listNode *h);
-char *copy_string(char *destination, const char *source);
+size_t listLength(const listNode *h);
+char *stringCopy(char *destination, const char *source);
 
 void freeCommandInfo(commandInfo *shellInfo, int all);
 

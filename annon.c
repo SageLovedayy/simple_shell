@@ -20,7 +20,7 @@ int replaceAlias(commandInfo *shellInfo)
 			if (p && (*p == '=' || *p == '\0'))
 			{
 				free(shellInfo->command_arguments[0]);
-				p = _strchr(node->value, '=');
+				p = stCr(node->value, '=');
 				if (p)
 				{
 					p = _strdup(p + 1);
@@ -41,12 +41,12 @@ int replaceAlias(commandInfo *shellInfo)
 
 
 /**
- * _strchr - add descr
+ * stCr - add descr
  * @s: add descr
  * @c: add descr
  * Return: add descr
  */
-char *_strchr(char *s, char c)
+char *stCr(char *s, char c)
 {
 	do {
 		if (*s == c)
@@ -71,9 +71,9 @@ char *findReplacementValue(commandInfo *shellInfo, const char *variable)
 	while (node)
 	{
 		p = string_starts_with(node->value, prefix);
-		if (p && (!_strchr(p, '=') || *(p + 1) == '='))
+		if (p && (!stCr(p, '=') || *(p + 1) == '='))
 		{
-			return (_strdup(_strchr(node->value, '=') + 1));
+			return (_strdup(stCr(node->value, '=') + 1));
 		}
 		node = node->next;
 	}

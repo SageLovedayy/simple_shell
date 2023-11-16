@@ -65,14 +65,14 @@ int _putchar(char c)
 
 
 /**
- * dupChars - add descr
+ * charDup - add descr
  * @pathstr: the PATH string
  * @start: starting index
  * @stop: stopping index
  *
  * Return: pointer to new buffer
  */
-char *dupChars(char *pathstr, int start, int stop)
+char *charDup(char *pathstr, int start, int stop)
 {
 	static char buf[BUF_SIZE];
 	int i = 0, k = 0;

@@ -14,18 +14,18 @@ int populateEnvironmentList(commandInfo *shellInfo)
 	size_t i;
 
 	for (i = 0; environ[i]; i++)
-		add_node_end(&node, environ[i], 0);
+		addNodeEnd(&node, environ[i], 0);
 	shellInfo->environment_variables = node;
 	return (0);
 }
 
 /**
- * _getenv - add descr
+ * retEnv - add descr
  * @shellInfo: Structure containing potential arguments. Used to maintain
  * @name: env var name
  * Return: add descr
  */
-char *_getenv(commandInfo *shellInfo, const char *name)
+char *retEnv(commandInfo *shellInfo, const char *name)
 {
 	listNode *node = shellInfo->environment_variables;
 	char *p;
@@ -45,14 +45,14 @@ char *_getenv(commandInfo *shellInfo, const char *name)
 /*LINKED LIST FUNCTIONS*/
 
 /**
- * add_node_end - adds a node to the end of the list
+ * addNodeEnd - adds a node to the end of the list
  * @head: address of pointer to head node
  * @str: str field of node
  * @num: node index used by history
  *
  * Return: size of list
  */
-listNode *add_node_end(listNode **head, const char *str, int num)
+listNode *addNodeEnd(listNode **head, const char *str, int num)
 {
 	listNode *new_node, *node;
 

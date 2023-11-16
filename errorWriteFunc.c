@@ -53,12 +53,12 @@ int _fprintf(int fd, const char *format, ...)
 
 
 /**
- * _eputs - prints an input string
+ * errorPuts - prints an input string
  * @str: the string to be printed
  *
  * Return: Nothing
  */
-void _eputs(char *str)
+void errorPuts(char *str)
 {
 	int i = 0;
 
@@ -74,29 +74,29 @@ void _eputs(char *str)
 /**
  * print_error - add descr
  * @shellInfo: add descr
- * @estr: add descr
+ * @errorStr: add descr
  * Return: add descr
  */
-void print_error(commandInfo *shellInfo, char *estr)
+void print_error(commandInfo *shellInfo, char *errorStr)
 {
-	_eputs(shellInfo->file_name);
-	_eputs(": ");
-	print_d(shellInfo->current_line_number, STDERR_FILENO);
-	_eputs(": ");
-	_eputs(shellInfo->command_arguments[0]);
-	_eputs(": ");
-	_eputs(estr);
+	errorPuts(shellInfo->file_name);
+	errorPuts(": ");
+	custPrint(shellInfo->current_line_number, STDERR_FILENO);
+	errorPuts(": ");
+	errorPuts(shellInfo->command_arguments[0]);
+	errorPuts(": ");
+	errorPuts(errorStr);
 }
 
 
 /**
- * print_d - function prints a decimal (integer) number (base 10)
+ * custPrint - function prints a decimal (integer) number (base 10)
  * @input: the input
  * @fd: the filedescriptor to write to
  *
  * Return: number of characters printed
  */
-int print_d(int input, int fd)
+int custPrint(int input, int fd)
 {
 	int (*__putchar)(char) = _putchar;
 	int i, count = 0;

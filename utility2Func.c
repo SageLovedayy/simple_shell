@@ -23,12 +23,12 @@ char *_memset(char *s, char b, unsigned int n)
 
 
 /**
- * is_delim - check if delimiter
+ * checkDelim - check if delimiter
  * @c: add descr
  * @delim: add descr
  * Return: 1 if true, 0 if false
  */
-int is_delim(char c, char *delim)
+int checkDelim(char c, char *delim)
 {
 	while (*delim)
 		if (*delim++ == c)
@@ -76,13 +76,13 @@ void sigintHandler(__attribute__((unused)) int sig_num)
 }
 
 /**
- * _getline - gets the next line of input from STDIN
+ * getLine - gets the next line of input from STDIN
  * @shellInfo: add descr
  * @ptr: add descr
  * @length: add descr
  * Return: add descr
  */
-int _getline(commandInfo *shellInfo, char **ptr, size_t *length)
+int getLine(commandInfo *shellInfo, char **ptr, size_t *length)
 {
 	static char buf[BUF_SIZE];
 	static size_t i, len;
@@ -96,11 +96,11 @@ int _getline(commandInfo *shellInfo, char **ptr, size_t *length)
 	if (i == len)
 		i = len = 0;
 
-	r = read_buf(shellInfo, buf, &len);
+	r = readBuffer(shellInfo, buf, &len);
 	if (r == -1 || (r == 0 && len == 0))
 		return (-1);
 
-	c = _strchr(buf + i, '\n');
+	c = stCr(buf + i, '\n');
 	k = c ? 1 + (unsigned int)(c - buf) : len;
 	new_p = _realloc(p, s, s ? s + k : k + 1);
 	if (!new_p) /* MALLOC FAILURE! */

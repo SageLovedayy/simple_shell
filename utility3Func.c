@@ -19,7 +19,7 @@ ssize_t inputBuf(commandInfo *shellInfo, char **buf, size_t *bufferLen)
 
 		signal(SIGINT, sigintHandler); /*SIGINT:signal sent as ctrl-c is pressed*/
 
-		bytesRead = _getline(shellInfo, buf, &lineLength);
+		bytesRead = getLine(shellInfo, buf, &lineLength);
 
 		if (bytesRead > 0)
 		{
@@ -29,7 +29,7 @@ ssize_t inputBuf(commandInfo *shellInfo, char **buf, size_t *bufferLen)
 				bytesRead--;
 			}
 			shellInfo->line_count_flag = 1;
-			/*remove_comments_in_string(*buf);*/
+			/*rmStringComment(*buf);*/
 			/*buildHistoryList(shellInfo, *buf, shellInfo->history_count++);*/
 			*bufferLen = bytesRead;
 			shellInfo->command_buffer = buf;
@@ -42,14 +42,14 @@ ssize_t inputBuf(commandInfo *shellInfo, char **buf, size_t *bufferLen)
 
 
 /**
- * read_buf - reads a buffer
+ * readBuffer - reads a buffer
  * @shellInfo: add descr
  * @buf: buffer
  * @i: size
  *
  * Return: r
  */
-ssize_t read_buf(commandInfo *shellInfo, char *buf, size_t *i)
+ssize_t readBuffer(commandInfo *shellInfo, char *buf, size_t *i)
 {
 	ssize_t r = 0;
 
@@ -93,14 +93,14 @@ void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size)
 }
 
 /**
- * is_chain - test if current char in buffer is a chain delimeter
+ * isChn - test if current char in buffer is a chain delimeter
  * @shellInfo: the parameter struct
  * @buf: the char buffer
  * @p: address of current position in buf
  *
  * Return: 1 if chain delimeter, 0 otherwise
  */
-int is_chain(commandInfo *shellInfo, char *buf, size_t *p)
+int isChn(commandInfo *shellInfo, char *buf, size_t *p)
 {
 	size_t j = *p;
 
@@ -108,18 +108,18 @@ int is_chain(commandInfo *shellInfo, char *buf, size_t *p)
 	{
 		buf[j] = 0;
 		j++;
-		shellInfo->command_buffer_type = CMD_OR;
+		shellInfo->command_buffer_type = CD_OR;
 	}
 	else if (buf[j] == '&' && buf[j + 1] == '&')
 	{
 		buf[j] = 0;
 		j++;
-		shellInfo->command_buffer_type = CMD_AND;
+		shellInfo->command_buffer_type = CD_AND;
 	}
 	else if (buf[j] == ';') /* found end of this command */
 	{
 		buf[j] = 0; /* replace semicolon with null */
-		shellInfo->command_buffer_type = CMD_CHAIN;
+		shellInfo->command_buffer_type = CD_CH;
 	}
 	else
 		return (0);
@@ -129,7 +129,7 @@ int is_chain(commandInfo *shellInfo, char *buf, size_t *p)
 
 
 /**
- * check_chain - checks we should continue chaining based on last status
+ * chkChain - checks we should continue chaining based on last status
  * @shellInfo: the parameter struct
  * @buf: the char buffer
  * @p: address of current position in buf
@@ -138,12 +138,12 @@ int is_chain(commandInfo *shellInfo, char *buf, size_t *p)
  *
  * Return: Void
  */
-void check_chain(commandInfo *shellInfo
+void chkChain(commandInfo *shellInfo
 , char *buf, size_t *p, size_t i, size_t len)
 {
 	size_t j = *p;
 
-	if (shellInfo->command_buffer_type == CMD_AND)
+	if (shellInfo->command_buffer_type == CD_AND)
 	{
 		if (shellInfo->commandExecStatus)
 		{
@@ -151,7 +151,7 @@ void check_chain(commandInfo *shellInfo
 			j = len;
 		}
 	}
-	if (shellInfo->command_buffer_type == CMD_OR)
+	if (shellInfo->command_buffer_type == CD_OR)
 	{
 		if (!shellInfo->commandExecStatus)
 		{

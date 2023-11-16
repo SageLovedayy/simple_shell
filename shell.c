@@ -168,10 +168,10 @@ ssize_t getInput(commandInfo *shellInfo)
 		j = i; /* init new iterator to current buf position */
 		p = buf + i; /* get pointer for return */
 
-		check_chain(shellInfo, buf, &j, i, len);
+		chkChain(shellInfo, buf, &j, i, len);
 		while (j < len) /* iterate to semicolon or end */
 		{
-			if (is_chain(shellInfo, buf, &j))
+			if (isChn(shellInfo, buf, &j))
 				break;
 			j++;
 		}
@@ -187,7 +187,7 @@ ssize_t getInput(commandInfo *shellInfo)
 		return (_strlen(p)); /* return length of current command */
 	}
 
-	*buf_p = buf; /* else not a chain, pass back buffer from _getline() */
-	return (r); /* return length of buffer from _getline() */
+	*buf_p = buf; /* else not a chain, pass back buffer from getLine() */
+	return (r); /* return length of buffer from getLine() */
 }
 

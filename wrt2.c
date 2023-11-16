@@ -1,12 +1,12 @@
 #include "main.h"
 
 /**
- * copy_string - Copies a string from source to destination.
+ * stringCopy - Copies a string from source to destination.
  * @destination: The destination buffer.
  * @source: The source string.
  * Return: Pointer to the destination buffer.
  */
-char *copy_string(char *destination, const char *source)
+char *stringCopy(char *destination, const char *source)
 {
 	int index = 0;
 

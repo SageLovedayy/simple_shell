@@ -53,24 +53,24 @@ void executeExternalCmd(commandInfo *shellInfo)
 		shellInfo->line_count_flag = 0;
 	}
 	for (i = 0, k = 0; shellInfo->current_argument[i]; i++)
-		if (!is_delim(shellInfo->current_argument[i], " \t\n"))
+		if (!checkDelim(shellInfo->current_argument[i], " \t\n"))
 			k++;
 	if (!k)
 		return;
 
-	path = findPath(shellInfo, _getenv(shellInfo, "PATH=")
+	path = findPath(shellInfo, retEnv(shellInfo, "PATH=")
 	, shellInfo->command_arguments[0]);
 	if (path)
 	{
 		shellInfo->executable_path = path;
-		fork_cmd(shellInfo);
+		fkCommand(shellInfo);
 	}
 	else
 	{
 		if (((isatty(STDIN_FILENO) && shellInfo->input_file_descriptor <= 2)
-		|| _getenv(shellInfo, "PATH=") || shellInfo->command_arguments[0][0] == '/')
+		|| retEnv(shellInfo, "PATH=") || shellInfo->command_arguments[0][0] == '/')
 		&& isCmd(shellInfo, shellInfo->command_arguments[0]))
-			fork_cmd(shellInfo);
+			fkCommand(shellInfo);
 		else if (*(shellInfo->current_argument) != '\n')
 		{
 			shellInfo->commandExecStatus = 127;
@@ -80,11 +80,11 @@ void executeExternalCmd(commandInfo *shellInfo)
 }
 
 /**
- * is_regular_file - Checks if a given path corresponds to a regular file.
+ * checkReg - Checks if a given path corresponds to a regular file.
  * @path: add descr
  * Return: 1 if the path is a regular file, 0 otherwise.
  */
-int is_regular_file(const char *path)
+int checkReg(const char *path)
 {
 	struct stat st;
 
@@ -138,7 +138,7 @@ char *findPath(commandInfo *shellInfo, char *pathstr, char *cmd)
 	{
 		if (!pathstr[i] || pathstr[i] == ':')
 		{
-			path = dupChars(pathstr, curr_pos, i);
+			path = charDup(pathstr, curr_pos, i);
 			if (!*path)
 				string_concatenate(path, cmd);
 			else
@@ -146,7 +146,7 @@ char *findPath(commandInfo *shellInfo, char *pathstr, char *cmd)
 				string_concatenate(path, "/");
 				string_concatenate(path, cmd);
 			}
-			if (is_regular_file(path))
+			if (checkReg(path))
 				return (path);
 			if (!pathstr[i])
 				break;

@@ -4,12 +4,12 @@
 /*FORK CMD*/
 
 /**
- * fork_cmd - forks a an exec thread to run cmd
+ * fkCommand - forks a an exec thread to run cmd
  * @shellInfo: the parameter & return info struct
  *
  * Return: void
  */
-void fork_cmd(commandInfo *shellInfo)
+void fkCommand(commandInfo *shellInfo)
 {
 	pid_t child_pid;
 
@@ -23,7 +23,7 @@ void fork_cmd(commandInfo *shellInfo)
 	if (child_pid == 0)
 	{
 		if (execve(shellInfo->executable_path, shellInfo->command_arguments
-		, get_environ(shellInfo)) == -1)
+		, retEnviron(shellInfo)) == -1)
 		{
 			freeCommandInfo(shellInfo, 1);
 			if (errno == EACCES)
@@ -45,15 +45,15 @@ void fork_cmd(commandInfo *shellInfo)
 }
 
 /**
- * get_environ - add descr
+ * retEnviron - add descr
  * @shellInfo: add descr
  * Return: Always 0
  */
-char **get_environ(commandInfo *shellInfo)
+char **retEnviron(commandInfo *shellInfo)
 {
 	if (!shellInfo->environment || shellInfo->environment_changed_flag)
 	{
-		shellInfo->environment = list_to_strings(shellInfo->environment_variables);
+		shellInfo->environment = toStrFrmList(shellInfo->environment_variables);
 		shellInfo->environment_changed_flag = 0;
 	}
 
@@ -63,15 +63,15 @@ char **get_environ(commandInfo *shellInfo)
 
 
 /**
- * list_to_strings - returns an array of strings of the list->str
+ * toStrFrmList - returns an array of strings of the list->str
  * @head: pointer to first node
  *
  * Return: array of strings
  */
-char **list_to_strings(listNode *head)
+char **toStrFrmList(listNode *head)
 {
 	listNode *node = head;
-	size_t i = list_len(head), j;
+	size_t i = listLength(head), j;
 	char **strs;
 	char *str;
 
@@ -91,7 +91,7 @@ char **list_to_strings(listNode *head)
 			return (NULL);
 		}
 
-		str = copy_string(str, node->value);
+		str = stringCopy(str, node->value);
 		strs[i] = str;
 	}
 	strs[i] = NULL;
@@ -101,12 +101,12 @@ char **list_to_strings(listNode *head)
 
 /*==================linked list func*/
 /**
- * list_len - determines length of linked list
+ * listLength - determines length of linked list
  * @h: pointer to first node
  *
  * Return: size of list
  */
-size_t list_len(const listNode *h)
+size_t listLength(const listNode *h)
 {
 	size_t i = 0;
 

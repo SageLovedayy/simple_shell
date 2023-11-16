@@ -33,13 +33,13 @@ int string_to_integer(char *str)
 
 
 /**
- * print_decimal - Prints a decimal (integer) number (base 10).
+ * custPrintecimal - Prints a decimal (integer) number (base 10).
  * @input: The input.
  * @fd: The file descriptor to write to.
  *
  * Return: Number of characters printed.
  */
-int print_decimal(int input, int fd)
+int custPrintecimal(int input, int fd)
 {
 	int (*output_char)(char) = _putchar;
 	int i, count = 0;
@@ -115,12 +115,12 @@ char *number_to_string(long int num, int base, int flags)
 }
 
 /**
- * remove_comments_in_string - Replaces the first instance of '#' with '\0'.
+ * rmStringComment - Replaces the first instance of '#' with '\0'.
  * @buffer: Address of the string to modify.
  *
  * Return: Always 0.
  */
-void remove_comments_in_string(char *buffer)
+void rmStringComment(char *buffer)
 {
 	int i;
 
