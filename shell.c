@@ -38,6 +38,22 @@ int main(int argc, char **argv)
 	return (EXIT_SUCCESS);
 }
 
+/*==================================================*/
+/*SHELLINFO COMMANDS*/
+
+/**
+ * clearCommandInfo - initializes struct
+ * @shellInfo: add descr
+ */
+
+void clearCommandInfo(commandInfo *shellInfo)
+{
+	shellInfo->current_argument = NULL;
+	shellInfo->command_arguments = NULL;
+	shellInfo->executable_path = NULL;
+	shellInfo->argument_count = 0;
+}
+
 
 
 /**
@@ -90,21 +106,5 @@ int runShell(commandInfo *shellInfo, char **argv)
 	return (builtinReturn);
 }
 
-
-/*==================================================*/
-/*SHELLINFO COMMANDS*/
-
-/**
- * clearCommandInfo - initializes struct
- * @shellInfo: add descr
- */
-
-void clearCommandInfo(commandInfo *shellInfo)
-{
-	shellInfo->current_argument = NULL;
-	shellInfo->command_arguments = NULL;
-	shellInfo->executable_path = NULL;
-	shellInfo->argument_count = 0;
-}
 
 
