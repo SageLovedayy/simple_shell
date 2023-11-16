@@ -63,3 +63,61 @@ char *_strncat(char *dest, char *src, int n)
 		dest[i] = '\0';
 	return (s);
 }
+
+/**
+ * sigintHandler - gets the next line of input from STDIN
+ * @sig_num: add descr
+ */
+void sigintHandler(__attribute__((unused)) int sig_num)
+{
+	_putchar('\n');
+	_putchar('$');
+	_putchar(FLUSH_BUFFER);
+}
+
+/**
+ * _getline - gets the next line of input from STDIN
+ * @shellInfo: add descr
+ * @ptr: add descr
+ * @length: add descr
+ * Return: add descr
+ */
+int _getline(commandInfo *shellInfo, char **ptr, size_t *length)
+{
+	static char buf[BUF_SIZE];
+	static size_t i, len;
+	size_t k;
+	ssize_t r = 0, s = 0;
+	char *p = NULL, *new_p = NULL, *c;
+
+	p = *ptr;
+	if (p && length)
+		s = *length;
+	if (i == len)
+		i = len = 0;
+
+	r = read_buf(shellInfo, buf, &len);
+	if (r == -1 || (r == 0 && len == 0))
+		return (-1);
+
+	c = _strchr(buf + i, '\n');
+	k = c ? 1 + (unsigned int)(c - buf) : len;
+	new_p = _realloc(p, s, s ? s + k : k + 1);
+	if (!new_p) /* MALLOC FAILURE! */
+		return (p ? free(p), -1 : -1);
+
+	if (s)
+		_strncat(new_p, buf + i, k - i);
+	else
+		_strncpy(new_p, buf + i, k - i + 1);
+
+	s += k - i;
+	i = k;
+	p = new_p;
+
+	if (length)
+		*length = s;
+	*ptr = p;
+	return (s);
+}
+
