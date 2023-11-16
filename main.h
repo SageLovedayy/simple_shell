@@ -143,6 +143,7 @@ ssize_t getInput(commandInfo *shellInfo);
 int findBuiltinCmd(commandInfo *shellInfo);
 
 int exitCommand(commandInfo *shellInfo);
+int envCommand(commandInfo *shellInfo);
 
 char *_strtok(char *str, const char *delim);
 char *_strpbrk(char *s, const char *accept);

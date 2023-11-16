@@ -43,13 +43,37 @@ int fdWrites(char *str, int fd)
 	return (i);
 }
 
-
+/**
+ * exitCommand - add descr
+ * @shellInfo: add descr
+ * Return: add descr
+ */
 int exitCommand(commandInfo *shellInfo)
 {
 
-    shellInfo->commandExecStatus = EXIT_SUCCESS;
+	shellInfo->commandExecStatus = EXIT_SUCCESS;
 
-    exit(EXIT_SUCCESS);
+	exit(EXIT_SUCCESS);
 
-    return EXIT_SUCCESS;
+	return (EXIT_SUCCESS);
+}
+
+/**
+ * envCommand - add descr
+ * @shellInfo: add descr
+ * Return: add descr
+ */
+int envCommand(commandInfo *shellInfo)
+{
+	char **env;
+
+	for (env = environ; *env != NULL; env++)
+	{
+		printf("%s\n", *env);
+	}
+
+
+	shellInfo->commandExecStatus = EXIT_SUCCESS;
+
+	return (EXIT_SUCCESS);
 }

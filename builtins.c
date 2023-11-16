@@ -16,7 +16,7 @@ int findBuiltinCmd(commandInfo *shellInfo)
 		{"history", NULL},
 		{"setenv", NULL},
 		{"exit", exitCommand},
-		{"env", NULL},
+		{"env", envCommand},
 		{"cd", NULL},
 		{"alias", NULL},
 		{"help", NULL},
