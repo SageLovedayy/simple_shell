@@ -15,7 +15,7 @@ int findBuiltinCmd(commandInfo *shellInfo)
 	commandStruct builtInCommand[] = {
 		{"history", NULL},
 		{"setenv", NULL},
-		{"exit", NULL},
+		{"exit", _exit},
 		{"env", NULL},
 		{"cd", NULL},
 		{"alias", NULL},

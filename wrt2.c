@@ -75,7 +75,7 @@ void print_string(char *str)
  * write_character - Writes a character to the standard output buffer.
  * @character: The character to write.
  *
- * Returns: On success, returns 1.
+ * Return: On success, returns 1.
  * On error, -1 is returned, and errno is set appropriately.
  */
 int write_character(char character)

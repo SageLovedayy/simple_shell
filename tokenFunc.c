@@ -1,12 +1,5 @@
 #include "main.h"
 
-/********************************/
-/********** print_str ***********/
-/*********** _strtok ************/
-/********** _strpbrk ************/
-/*********** _strspn ************/
-/********************************/
-
 /**
  * print_str - prints a string to the STDOUT
  * @format: formatted string containing specifiers
