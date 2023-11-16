@@ -5,7 +5,7 @@
 
 /**
  * fkCommand - forks a an exec thread to run cmd
- * @shellInfo: the parameter & return info struct
+ * @shellInfo: add descr
  *
  * Return: void
  */

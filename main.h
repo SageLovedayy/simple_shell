@@ -193,5 +193,6 @@ void freeCommandInfo(commandInfo *shellInfo, int all);
 int buffFree(void **ptr);
 void stringFree(char **pp);
 void freeList(listNode **head_ptr);
+int customAtoi(const char *str);
 
 #endif /*main.h*/
