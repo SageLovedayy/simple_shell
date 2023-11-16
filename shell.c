@@ -88,10 +88,6 @@ int main(int argc, char **argv)
 
 	runShell(shellInfo, argv);
 
-	/**
-	*readHistory(shellInfo);
-
-	*/
 
 	return (EXIT_SUCCESS);
 }

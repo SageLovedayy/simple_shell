@@ -142,6 +142,8 @@ void setInfo(commandInfo *shellInfo, char **argv);
 ssize_t getInput(commandInfo *shellInfo);
 int findBuiltinCmd(commandInfo *shellInfo);
 
+int exitCommand(commandInfo *shellInfo);
+
 char *_strtok(char *str, const char *delim);
 char *_strpbrk(char *s, const char *accept);
 size_t _strspn(const char *s, const char *accept);

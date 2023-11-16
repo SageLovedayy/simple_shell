@@ -44,3 +44,12 @@ int fdWrites(char *str, int fd)
 }
 
 
+int exitCommand(commandInfo *shellInfo)
+{
+
+    shellInfo->commandExecStatus = EXIT_SUCCESS;
+
+    exit(EXIT_SUCCESS);
+
+    return EXIT_SUCCESS;
+}
