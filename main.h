@@ -144,6 +144,7 @@ int findBuiltinCmd(commandInfo *shellInfo);
 
 int exitCommand(commandInfo *shellInfo);
 int envCommand(commandInfo *shellInfo);
+int cdCommand(commandInfo *shellInfo);
 
 char *_strtok(char *str, const char *delim);
 char *_strpbrk(char *s, const char *accept);
