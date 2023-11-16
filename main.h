@@ -1,35 +1,41 @@
-#ifndef _MAIN_H_
-#define _MAIN_H_
+#ifndef _MAIN_H
+#define _MAIN_H
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <limits.h>
 #include <stdarg.h>
 #include <sys/types.h>
 #include <sys/wait.h>
-#include <limits.h>
 
 #include <stdbool.h>
 #include <errno.h>
 
-#include <sys/stat.h>
-#include <signal.h>
+#include <string.h>
 #include <fcntl.h>
 
-#include <string.h>
+#include <sys/stat.h>
+
+#include <signal.h>
 
 #define BUF_SIZE 1024
 #define FLUSH_BUFFER -1
-#define CUSTOM_FD_OFFSET 9 /*For adjusting fd offset*/
+
+
+#define CMD_OR		1
+#define CMD_AND		2
+#define CMD_CHAIN	3
 
 extern char **environ;
 
+
 /**
-* struct Node - singly linked list node
-* @index: numerical index/ identifier
-* @value: string value
-* @next: pointer to next node
-*/
+ * struct Node - singly linked list node
+ * @index: numerical index or identifier
+ * @value: string value
+ * @next: points to the next node
+ */
 typedef struct Node
 {
 	int index;
@@ -37,27 +43,28 @@ typedef struct Node
 	struct Node *next;
 } listNode;
 
+
 /**
-* struct pseudoArgs - struct of pseudo arguments to pass into a function
-* @current_argument: add descr
-* @command_arguments: add descr
-* @executable_path: add descr
-* @argument_count: add descr
-* @current_line_number: add descr
-* @error_number: add descr
-* @line_count_flag: add descr
-* @file_name: add descr
-* @environment_variables: add descr
-* @environment: add descr
-* @command_history: add descr
-* @alias_list: add descr
-* @environment_changed_flag: add descr
-* @commandExecStatus: add descr
-* @command_buffer: add descr
-* @command_buffer_type: add descr
-* @input_file_descriptor: add descr
-* @history_count: add descr
-*/
+ * struct pseudoArgs- contains pseudo-arguements to pass into a function,
+ * @current_argument: add descr
+ * @command_arguments: add descr
+ * @executable_path: add descr
+ * @argument_count: add descr
+ * @current_line_number: add descr
+ * @error_number: add descr
+ * @line_count_flag: add descr
+ * @file_name: add descr
+ * @environment_variables: add descr
+ * @environment: add descr
+ * @command_history: add descr
+ * @alias_list: add descr
+ * @environment_changed_flag: add descr
+ * @commandExecStatus: add descr
+ * @command_buffer: add descr
+ * @command_buffer_type: add descr
+ * @input_file_descriptor: add descr
+ * @history_count: add descr
+ */
 typedef struct pseudoArgs
 {
 	char *current_argument;
@@ -80,11 +87,6 @@ typedef struct pseudoArgs
 	int history_count;
 } commandInfo;
 
-/*Init commandInfo pseudoArg vals to NULL for ptrs, 0 for other data types*/
-#define COMMAND_INFO_INIT \
-{NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, \
-		0, 0, 0, 0, 0, 0, 0, 0, 0}
-
 
 /**
  * struct BuiltInCommand - Represents a built-in shell command
@@ -93,53 +95,99 @@ typedef struct pseudoArgs
  */
 typedef struct BuiltInCommand
 {
-	/* Name of the built-in command */
 	const char *name;
-	/* Function pointer for handling the command */
 	int (*CommandFunction)(commandInfo *);
 } commandStruct;
 
-/*=========ENTRY FUNCTION===================*/
-int main(int argc, char **argv);
-int runShell(commandInfo *shellInfo, char **argv);
+/*initialize commandInfo values to NULL for pointers & 0 for others*/
+#define COMMAND_INFO_INIT \
+{NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, \
+		0, 0, 0, 0, 0, 0, 0, 0, 0}
 
-/*==========WRITE FUNCTIONS=================*/
-int _fprintf(int fd, const char *format, ...);
+int runShell(commandInfo *shellInfo, char **argv);
+int main(int argc, char **argv);
+
 int print_str(const char *format, ...);
 int _putchar(char c);
-/*===========ERROR WRITE FUNCTIONS=========*/
-int print_error_char(char character);
+char *dupChars(char *pathstr, int start, int stop);
 
-/*===========UTILITY FUNCTIONS==============*/
+void print_error(commandInfo *shellInfo, char *estr);
+int print_error_char(char character);
+int _fprintf(int fd, const char *format, ...);
+void _eputs(char *str);
+int print_d(int input, int fd);
+int _eputchar(char c);
+
+listNode *add_node_end(listNode **head, const char *str, int num);
+
+int populateEnvironmentList(commandInfo *shellInfo);
+char *_getenv(commandInfo *shellInfo, const char *name);
+char **get_environ(commandInfo *shellInfo);
+
+char *findPath(commandInfo *shellInfo, char *pathstr, char *cmd);
+void executeExternalCmd(commandInfo *shellInfo);
+
 char *_strdup(const char *str);
 int _strlen(char *s);
-
-/*=========ENVIRONMENT LIST FUNCTIONS=======*/
-int populateEnvironmentList(commandInfo *shellInfo);
-
-/*=========LINKED LIST FUNCTIONS============*/
-listNode *addNodeEnd(listNode **head, const char *str, int num);
-
-/*=========MEMORY AND REALLOC================*/
-char *_memset(char *dest, char byteVal, unsigned int numBytes);
-
-
-/*=================================================================*/
-
-
-char *argChecker(int argc, char *cmd);
-bool flagChecker(const char *token);
-
-void executeLS(int argc, char *argv[]);
-void executeCD(int argc, char *argv[]);
-void handleEnvCommand(int argc, char *argv[]);
-char *_strtok(char *str, const char *delim);
-
-int print_str(const char *format, ...);
-char *_strpbrk(char *s, const char *accept);
 int _strcmp(const char *s1, const char *s2);
-size_t _strspn(const char *s, const char *accept);
-int _strncmp(const char *s1, const char *s2, int n);
-int _atoi(char *s);
+int _strncmp(const char *s1, const char *s2, size_t n);
+char *string_concatenate(char *destination, char *source);
+char *string_starts_with(const char *haystack, const char *needle);
 
-#endif /* _MAIN_H_ */
+char *_memset(char *s, char b, unsigned int n);
+
+void clearCommandInfo(commandInfo *shellInfo);
+void setInfo(commandInfo *shellInfo, char **argv);
+
+ssize_t getInput(commandInfo *shellInfo);
+int findBuiltinCmd(commandInfo *shellInfo);
+
+char *_strtok(char *str, const char *delim);
+char *_strpbrk(char *s, const char *accept);
+size_t _strspn(const char *s, const char *accept);
+int is_delim(char c, char *delim);
+char **strtow(char *str, char *d);
+
+int _putfd(char c, int fd);
+int _putsfd(char *str, int fd);
+
+int is_regular_file(const char *path);
+int isCmd(commandInfo *shellInfo, char *path);
+
+int replaceAlias(commandInfo *shellInfo);
+void replaceVars(commandInfo *shellInfo);
+char *findReplacementValue(commandInfo *shellInfo, const char *variable);
+void replaceVars(commandInfo *shellInfo);
+char *_strchr(char *s, char c);
+
+char *itoa1(long int num, int base, int flags);
+
+void remove_comments_in_string(char *buffer);
+void sigintHandler(__attribute__((unused)) int sig_num);
+ssize_t inputBuf(commandInfo *shellInfo, char **buf, size_t *bufferLen);
+
+int is_chain(commandInfo *shellInfo, char *buf, size_t *p);
+void check_chain(commandInfo *shellInfo, char *buf, size_t *p
+, size_t i, size_t len);
+int _getline(commandInfo *shellInfo, char **ptr, size_t *length);
+
+char *_strncpy(char *dest, char *src, int n);
+char *_strncat(char *dest, char *src, int n);
+
+
+ssize_t read_buf(commandInfo *shellInfo, char *buf, size_t *i);
+void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
+
+void fork_cmd(commandInfo *shellInfo);
+char **list_to_strings(listNode *head);
+
+size_t list_len(const listNode *h);
+char *copy_string(char *destination, const char *source);
+
+void freeCommandInfo(commandInfo *shellInfo, int all);
+
+int buffFree(void **ptr);
+void stringFree(char **pp);
+void freeList(listNode **head_ptr);
+
+#endif /*main.h*/

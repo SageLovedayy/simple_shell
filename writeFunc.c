@@ -1,118 +1,133 @@
 #include "main.h"
 
 /**
- * _fprintf - add descr
- * @fd: add descr
- * @format: add descr
- * Return: count
-*/
-int _fprintf(int fd, const char *format, ...)
+ * string_to_integer - Converts a string to an integer.
+ * @str: The string to be converted.
+ *
+ * Return: 0 if no numbers in the string, converted number otherwise.
+ *		 -1 on error.
+ */
+int string_to_integer(char *str)
 {
-	va_list args;
-	int count = 0;
+	int i = 0;
+	unsigned long int result = 0;
 
-	va_start(args, format);
+	if (*str == '+')
+		str++;
 
-	while (*format != '\0')
+	for (i = 0; str[i] != '\0'; i++)
 	{
-		if (*format == '%')
+		if (str[i] >= '0' && str[i] <= '9')
 		{
-			format++;
-			switch (*format)
-			{
-			case 's':
-			{
-				char *str = va_arg(args, char *);
-
-				write(fd, str, _strlen(str));
-				count += _strlen(str);
-				break;
-			}
-			/*we will add cases for any other specifiers we need*/
-			default:
-				/*Handle unsupported specifier or just ignore it*/
-				write(fd, "%", 1);
-				count++;
-				break;
-			}
+			result *= 10;
+			result += (str[i] - '0');
+			if (result > INT_MAX)
+				return (-1);
 		}
 		else
-		{
-			write(fd, format, 1);
-			count++;
-		}
-		format++;
+			return (-1);
 	}
 
-	va_end(args);
-	return (count);
+	return (result);
 }
 
 
 /**
- * print_str - prints a string to the STDOUT
- * @format: formatted string containing specifiers
- * Return: number of char printed
-*/
-int print_str(const char *format, ...)
+ * print_decimal - Prints a decimal (integer) number (base 10).
+ * @input: The input.
+ * @fd: The file descriptor to write to.
+ *
+ * Return: Number of characters printed.
+ */
+int print_decimal(int input, int fd)
 {
-	va_list args;
-	int count = 0;
+	int (*output_char)(char) = _putchar;
+	int i, count = 0;
+	unsigned int absolute_value, current;
 
-	va_start(args, format);
+	if (fd == STDERR_FILENO)
+		output_char = print_error_char;
 
-	while (*format != '\0')
+	if (input < 0)
 	{
-		if (*format == '%')
+		absolute_value = -input;
+		output_char('-');
+		count++;
+	}
+	else
+	{
+		absolute_value = input;
+	}
+
+	current = absolute_value;
+
+	for (i = 1000000000; i > 1; i /= 10)
+	{
+		if (absolute_value / i)
 		{
-			format++;
-			switch (*format)
-			{
-			case 's':
-			{
-				const char *str = va_arg(args, const char *);
-				count += print_str(str);
-				break;
-			}
-			/* add more cases for other specifiers as needed */
-			default:
-				/*Handle unsupported specifier or just ignore it*/
-				write(1, "%", 1);
-				count++;
-				break;
-			}
-		}
-		else{
-			write(1, format, 1);
+			output_char('0' + current / i);
 			count++;
 		}
-
-		format++;
+		current %= i;
 	}
-	va_end(args);
+
+	output_char('0' + current);
+	count++;
 
 	return (count);
 }
 
+/**
+ * number_to_string - Converts a number to a string.
+ * @num: Number.
+ * @base: Base.
+ * @flags: Argument flags.
+ *
+ * Return: String.
+ */
+char *number_to_string(long int num, int base, int flags)
+{
+	static char *digits;
+	static char buffer[50];
+	char sign = 0;
+	char *ptr;
+	unsigned long n = num;
+
+	if (!(flags & 2) && num < 0) /*2 = unsigned, 1 = lowercase*/
+	{
+		n = -num;
+		sign = '-';
+	}
+
+	digits = flags & 1 ? "0123456789abcdef" : "0123456789ABCDEF";
+	ptr = &buffer[49];
+	*ptr = '\0';
+
+	do {
+		*--ptr = digits[n % base];
+		n /= base;
+	} while (n != 0);
+
+	if (sign)
+		*--ptr = sign;
+
+	return (ptr);
+}
 
 /**
- * _putchar - writes the character c to stdout
- * @c: character
- * Return: On success 1.
- * On error, -1 is returned, and errno set.
-*/
-int _putchar(char c)
+ * remove_comments_in_string - Replaces the first instance of '#' with '\0'.
+ * @buffer: Address of the string to modify.
+ *
+ * Return: Always 0.
+ */
+void remove_comments_in_string(char *buffer)
 {
-	static int i;
-	static char buf[BUF_SIZE];
+	int i;
 
-	if (c== FLUSH_BUFFER || i >= BUF_SIZE)
-	{
-		write(1, buf, i);
-		i = 0;
-	}
-	if (c != FLUSH_BUFFER)
-		buf[i++] = c;
-
-	return (1);
+	for (i = 0; buffer[i] != '\0'; i++)
+		if (buffer[i] == '#' && (!i || buffer[i - 1] == ' '))
+		{
+			buffer[i] = '\0';
+			break;
+		}
 }
