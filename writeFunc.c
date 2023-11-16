@@ -71,6 +71,7 @@ int print_str(const char *format, ...)
 			case 's':
 			{
 				const char *str = va_arg(args, const char *);
+
 				count += print_str(str);
 				break;
 			}
@@ -82,7 +83,8 @@ int print_str(const char *format, ...)
 				break;
 			}
 		}
-		else{
+		else
+		{
 			write(1, format, 1);
 			count++;
 		}
@@ -106,7 +108,7 @@ int _putchar(char c)
 	static int i;
 	static char buf[BUF_SIZE];
 
-	if (c== FLUSH_BUFFER || i >= BUF_SIZE)
+	if (c == FLUSH_BUFFER || i >= BUF_SIZE)
 	{
 		write(1, buf, i);
 		i = 0;

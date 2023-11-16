@@ -95,8 +95,8 @@ int runShell(commandInfo *shellInfo, char **argv)
 /*SHELLINFO COMMANDS*/
 
 /**
- * clear_info - initializes struct
- * @info: add descr
+ * clearCommandInfo - initializes struct
+ * @shellInfo: add descr
  */
 
 void clearCommandInfo(commandInfo *shellInfo)

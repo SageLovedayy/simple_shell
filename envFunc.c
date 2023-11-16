@@ -19,10 +19,12 @@ int populateEnvironmentList(commandInfo *shellInfo)
 	shellInfo->environment_variables = node;
 
 	current = shellInfo->environment_variables;
-
-	while (current) { /*Just a test to check env print. Do not forget to take out this while block*/
+	/*Just a test to check env print. Do not forget to take out this while block*/
+	while (current)
+	{
 		printf("Debug inside loop\n");
-		printf("Environment variables: %s\n", current->value ? current->value : "(nil)");
+		printf("Environment variables: %s\n",
+			current->value ? current->value : "(nil)");
 		current = current->next;
 	}
 

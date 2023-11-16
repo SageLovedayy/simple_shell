@@ -5,7 +5,8 @@
  * print_error_char - Writes the character to the standard error stream.
  * @character: The character to print.
  *
- * Return: On success, returns 1. On error, -1 is returned, and errno is set appropriately.
+ * Return: On success, returns 1. On error, -1 is returned,
+ *	and errno is set appropriately.
  */
 int print_error_char(char character)
 {
@@ -21,5 +22,5 @@ int print_error_char(char character)
 	if (character != FLUSH_BUFFER)
 		output_buffer[buffer_index++] = character;
 
-	return 1;
+	return (1);
 }
