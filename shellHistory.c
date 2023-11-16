@@ -50,13 +50,21 @@ int fdWrites(char *str, int fd)
  */
 int exitCommand(commandInfo *shellInfo)
 {
+	int exitStatus = EXIT_SUCCESS;
 
-	shellInfo->commandExecStatus = EXIT_SUCCESS;
+	if (shellInfo->command_arguments[1] != NULL)
+	{
+		exitStatus = atoi(shellInfo->command_arguments[1]);
+	}
 
-	exit(EXIT_SUCCESS);
+	shellInfo->commandExecStatus = exitStatus;
 
-	return (EXIT_SUCCESS);
+	exit(exitStatus);
+
+
+	return (exitStatus);
 }
+
 
 /**
  * envCommand - add descr
